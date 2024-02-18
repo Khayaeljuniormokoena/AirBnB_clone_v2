@@ -68,17 +68,43 @@ class DBStorage:
         """delete an element in the table
         """
         if obj:
-            self.session.delete(obj)
+            self.__session.delete(obj)
 
     def reload(self):
         """configuration
         """
         Base.metadata.create_all(self.__engine)
-        sec = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        Session = scoped_session(sec)
+        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        Session = scoped_session(session_factory)
         self.__session = Session()
 
     def close(self):
         """ calls remove()
         """
         self.__session.close()
+
+    def get_class(self, cls_str):
+        """Helper method to convert class string to actual class"""
+        class_mapping = {'State': State, 'City': City, 'User': User, 'Place': Place, 'Review': Review, 'Amenity': Amenity}
+        return class_mapping.get(cls_str, None)
+
+    def all(self, cls=None):
+        """returns a dictionary"""
+        dic = {}
+
+        if cls:
+            cls = self.get_class(cls)
+            if cls:
+                query = self.__session.query(cls)
+                for elem in query:
+                    key = "{}.{}".format(type(elem).__name__, elem.id)
+                    dic[key] = elem
+        else:
+            class_list = [State, City, User, Place, Review, Amenity]
+            for cls in class_list:
+                query = self.__session.query(cls)
+                for elem in query:
+                    key = "{}.{}".format(type(elem).__name__, elem.id)
+                    dic[key] = elem
+
+        return dic
