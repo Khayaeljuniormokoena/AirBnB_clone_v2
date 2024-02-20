@@ -7,7 +7,6 @@ from uuid import UUID
 import json
 import os
 import pycodestyle
-import pep8
 
 
 class test_basemodel(unittest.TestCase):
@@ -222,3 +221,18 @@ class TestBaseModel(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class BaseModel:
+
+    def to_dict(self):
+        """Convert instance attributes to a dictionary."""
+        dict_copy = self.__dict__.copy()
+
+        # Convert datetime objects to string representation
+        dict_copy['created_at'] = self.created_at.isoformat()
+        dict_copy['updated_at'] = self.updated_at.isoformat()
+
+        # Add class information to the dictionary
+        dict_copy['__class__'] = self.__class__.__name__
+
+        return dict_copy

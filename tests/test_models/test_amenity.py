@@ -111,17 +111,19 @@ class test_Amenity_BaseModel(unittest.TestCase):
     @patch('models.storage')
     def test_save_method(self, mock_storage):
         """Testing save method and if it update"""
-        instance5 = Amenity()
-        created_at = instance5.created_at
-        sleep(2)
-        updated_at = instance5.updated_at
-        instance5.save()
-        new_created_at = instance5.created_at
-        sleep(2)
-        new_updated_at = instance5.updated_at
-        self.assertNotEqual(updated_at, new_updated_at)
-        self.assertEqual(created_at, new_created_at)
-        self.assertTrue(mock_storage.save.called)
+    instance5 = Amenity()
+    created_at = instance5.created_at
+    updated_at = instance5.updated_at
+    sleep(2)
+    instance5.save()
+    new_created_at = instance5.created_at
+    new_updated_at = instance5.updated_at
+
+    self.assertNotEqual(updated_at, new_updated_at)
+    self.assertEqual(created_at, instance5.created_at)
+    self.assertNotEqual(updated_at, new_updated_at)
+    self.assertNotEqual(created_at, new_created_at)
+    self.assertTrue(mock_storage.save.called)
 
 
 class TestAmenity(unittest.TestCase):
@@ -140,7 +142,7 @@ class TestAmenity(unittest.TestCase):
         amenity = Amenity()
         self.assertTrue(hasattr(amenity, "name"))
         if storage_t == 'db':
-            self.assertEqual(amenity.name, None)
+            self.assertIsNone(amenity.name)
         else:
             self.assertEqual(amenity.name, "")
 
@@ -152,7 +154,7 @@ class TestAmenity(unittest.TestCase):
         self.assertEqual(type(new_d), dict)
         self.assertFalse("_sa_instance_state" in new_d)
         for attr in am.__dict__:
-            if attr != "_sa_instance_state":
+            if attr is not "_sa_instance_state":
                 self.assertTrue(attr in new_d)
         self.assertTrue("__class__" in new_d)
 
@@ -172,3 +174,13 @@ class TestAmenity(unittest.TestCase):
         amenity = Amenity()
         string = "[Amenity] ({}) {}".format(amenity.id, amenity.__dict__)
         self.assertEqual(string, str(amenity))
+
+class Amenity(BaseModel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.name = kwargs.get('name', '')
+
+    def test_name2(self):
+    """ """
+    new = self.value(name="Some Name")
+    self.assertEqual(type(new.name), str)

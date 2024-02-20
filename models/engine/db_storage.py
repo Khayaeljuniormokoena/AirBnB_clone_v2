@@ -39,7 +39,7 @@ class DBStorage:
         """
         dic = {}
         if cls:
-            if type(cls) is str:
+            if isinstance(cls, str):
                 cls = eval(cls)
             query = self.__session.query(cls)
             for elem in query:
@@ -74,7 +74,8 @@ class DBStorage:
         """configuration
         """
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        session_factory = sessionmaker(
+            bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
 
@@ -85,7 +86,13 @@ class DBStorage:
 
     def get_class(self, cls_str):
         """Helper method to convert class string to actual class"""
-        class_mapping = {'State': State, 'City': City, 'User': User, 'Place': Place, 'Review': Review, 'Amenity': Amenity}
+        class_mapping = {
+            'State': State,
+            'City': City,
+            'User': User,
+            'Place': Place,
+            'Review': Review,
+            'Amenity': Amenity}
         return class_mapping.get(cls_str, None)
 
     def all(self, cls=None):

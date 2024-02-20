@@ -128,3 +128,25 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+class DBStorage:
+    """
+    This class represents the database storage engine.
+    It provides methods to interact with the database.
+
+    Attributes:
+        __engine: Database engine object
+        __session: Database session object
+    """
+
+    def __init__(self):
+        """
+        Initialize a new instance of the DBStorage class.
+
+        Args:
+            None
+        Returns:
+            None
+        """
+        self.__engine = None
+        self.__session = None

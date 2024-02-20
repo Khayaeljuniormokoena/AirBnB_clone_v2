@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 """ """
+import unittest
 from tests.test_models.test_base_model import test_basemodel
 from models.place import Place
 
 
-class test_Place(test_basemodel):
+class test_Place(test_basemodel, unittest.TestCase):
     """ """
 
     def __init__(self, *args, **kwargs):
@@ -59,9 +60,9 @@ class test_Place(test_basemodel):
         self.assertEqual(type(new.latitude), float)
 
     def test_longitude(self):
-    """ """
-    new = self.value()
-    self.assertEqual(type(new.longitude), float)
+        """ """
+        new = self.value()
+        self.assertEqual(type(new.latitude), float)
 
     def test_amenity_ids(self):
         """ """
