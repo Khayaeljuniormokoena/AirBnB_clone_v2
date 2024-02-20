@@ -1,10 +1,9 @@
 #!/usr/bin/python3
 """ Module for testing file storage"""
-import unittest
 from models.base_model import BaseModel
 from models import storage
+import unittest
 import os
-
 
 class test_fileStorage(unittest.TestCase):
     """ Class to test the file storage method """
@@ -34,7 +33,10 @@ class test_fileStorage(unittest.TestCase):
         temp = None
         for obj in storage.all().values():
             temp = obj
-        self.assertTrue(temp is obj)
+        if temp is not None:
+            self.assertTrue(temp is obj)
+        else:
+            self.fail("No objects found in storage")
 
     def test_all(self):
         """ __objects is properly returned """
@@ -71,6 +73,19 @@ class test_fileStorage(unittest.TestCase):
             loaded = obj
         self.assertEqual(new.to_dict()['id'], loaded.to_dict()['id'])
 
+    def reload(self):
+    """ Reloads objects from file """
+    try:
+        with open(self.__file_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            for key, value in data.items():
+                class_name = value['__class__']
+                cls = models[class_name]  # Assuming you have a mapping of class names to classes
+                instance = cls(**value)
+                self.__objects[key] = instance
+    except FileNotFoundError:
+        pass  # Handle the case where the file doesn't exist
+
     def test_reload_empty(self):
         """ Load from an empty file """
         with open('file.json', 'w') as f:
@@ -100,9 +115,13 @@ class test_fileStorage(unittest.TestCase):
         """ Key is properly formatted """
         new = BaseModel()
         _id = new.to_dict()['id']
+        temp = None
         for key in storage.all().keys():
             temp = key
-        self.assertEqual(temp, 'BaseModel' + '.' + _id)
+         if temp is not None:
+             self.assertEqual(temp, 'BaseModel' + '.' + _id)
+        else:
+        self.fail("No keys found in storage")
 
     def test_storage_var_created(self):
         """ FileStorage object storage created """

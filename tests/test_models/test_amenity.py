@@ -49,12 +49,13 @@ class test_inherit_basemodel(unittest.TestCase):
 
 class test_Amenity_BaseModel(unittest.TestCase):
     """Testing user class"""
+
     def test_instances(self):
         with patch('models.amenity'):
             instance = Amenity()
             self.assertEqual(type(instance), Amenity)
             instance.name = "Barbie"
-            expectec_attrs_types = {
+            expected_attrs_types = {
                     "id": str,
                     "created_at": datetime,
                     "updated_at": datetime,
@@ -72,7 +73,7 @@ class test_Amenity_BaseModel(unittest.TestCase):
             self.assertEqual(inst_dict['name'], 'Barbie')
             self.assertEqual(inst_dict['__class__'], 'Amenity')
 
-            for attr, types in expectec_attrs_types.items():
+            for attr, types in expected_attrs_types.items():
                 with self.subTest(attr=attr, typ=types):
                     self.assertIn(attr, instance.__dict__)
                     self.assertIs(type(instance.__dict__[attr]), types)
@@ -102,7 +103,7 @@ class test_Amenity_BaseModel(unittest.TestCase):
 
     def test_str_method(self):
         """
-        Testin str magic method
+        Testing str magic method
         """
         inst = Amenity()
         str_output = "[Amenity] ({}) {}".format(inst.id, inst.__dict__)
@@ -111,19 +112,19 @@ class test_Amenity_BaseModel(unittest.TestCase):
     @patch('models.storage')
     def test_save_method(self, mock_storage):
         """Testing save method and if it update"""
-    instance5 = Amenity()
-    created_at = instance5.created_at
-    updated_at = instance5.updated_at
-    sleep(2)
-    instance5.save()
-    new_created_at = instance5.created_at
-    new_updated_at = instance5.updated_at
+        instance5 = Amenity()
+        created_at = instance5.created_at
+        updated_at = instance5.updated_at
+        sleep(2)
+        instance5.save()
+        new_created_at = instance5.created_at
+        new_updated_at = instance5.updated_at
 
-    self.assertNotEqual(updated_at, new_updated_at)
-    self.assertEqual(created_at, instance5.created_at)
-    self.assertNotEqual(updated_at, new_updated_at)
-    self.assertNotEqual(created_at, new_created_at)
-    self.assertTrue(mock_storage.save.called)
+        self.assertNotEqual(updated_at, new_updated_at)
+        self.assertEqual(created_at, instance5.created_at)
+        self.assertNotEqual(updated_at, new_updated_at)
+        self.assertNotEqual(created_at, new_created_at)
+        self.assertTrue(mock_storage.save.called)
 
 
 class TestAmenity(unittest.TestCase):
@@ -181,6 +182,6 @@ class Amenity(BaseModel):
         self.name = kwargs.get('name', '')
 
     def test_name2(self):
-    """ """
-    new = self.value(name="Some Name")
-    self.assertEqual(type(new.name), str)
+        """ """
+        new = self.value(name="Some Name")
+        self.assertEqual(type(new.name), str)
