@@ -2,9 +2,9 @@
 """ """
 from tests.test_models.test_base_model import test_basemodel
 from models.city import City
+from models.base_model import BaseModel
 import pycodestyle
 import unittest
-import pep8
 
 
 class test_City(test_basemodel):
@@ -14,15 +14,17 @@ class test_City(test_basemodel):
         """ """
         super().__init__(*args, **kwargs)
         self.name = "City"
-        self.instance = City()
+        self.value = City
 
     def test_state_id(self):
         """ """
-        self.assertEqual(type(self.instance.state_id), str)
+        new = self.value()
+        self.assertEqual(type(new.state_id), str)
 
     def test_name(self):
         """ """
-        self.assertEqual(type(self.instance.name), str)
+        new = self.value()
+        self.assertEqual(type(new.name), str)
 
 
 class Test_PEP8(unittest.TestCase):

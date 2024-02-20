@@ -1,18 +1,17 @@
 #!/usr/bin/python3
 """ """
-import unittest
 from tests.test_models.test_base_model import test_basemodel
-from models.base_model1 import BaseModel1
+from models.place import Place
 
 
-class test_Place(test_basemodel, unittest.TestCase):
+class test_Place(test_basemodel):
     """ """
 
     def __init__(self, *args, **kwargs):
         """ """
         super().__init__(*args, **kwargs)
         self.name = "Place"
-        self.value = BaseModel1
+        self.value = Place
 
     def test_city_id(self):
         """ """

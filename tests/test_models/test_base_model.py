@@ -1,14 +1,13 @@
 #!/usr/bin/python3
 """ """
-from models.base_model1 import BaseModel1
-from uuid import UUID
+from models.base_model import BaseModel
 import unittest
 import datetime
+from uuid import UUID
 import json
 import os
 import pycodestyle
-import pepe8
-
+import pep8
 
 class test_basemodel(unittest.TestCase):
     """ """
@@ -222,27 +221,3 @@ class TestBaseModel(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
-
-class BaseModel:
-    def __init__(self):
-        self.id = str(uuid.uuid4())  # Assign a unique ID when a new instance is created
-        self.created_at = datetime.datetime.now()  # Record the creation time
-        self.updated_at = datetime.datetime.now()  # Record the update time
-
-    def save(self):
-        """Update the 'updated_at' attribute with the current datetime."""
-        self.updated_at = datetime.datetime.now()
-
-    def to_dict(self):
-        """Convert instance attributes to a dictionary."""
-        dict_copy = self.__dict__.copy()
-
-        # Convert datetime objects to string representation
-        dict_copy['created_at'] = self.created_at.isoformat()
-        dict_copy['updated_at'] = self.updated_at.isoformat()
-
-        # Add class information to the dictionary
-        dict_copy['__class__'] = self.__class__.__name__
-
-        return dict_copy

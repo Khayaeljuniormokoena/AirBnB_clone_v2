@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 """ Module for testing file storage"""
+import unittest
 from models.base_model import BaseModel
 from models import storage
-import unittest
 import os
+
 
 class test_fileStorage(unittest.TestCase):
     """ Class to test the file storage method """
@@ -68,23 +69,10 @@ class test_fileStorage(unittest.TestCase):
         new = BaseModel()
         storage.save()
         storage.reload()
-        loaded = None
-        for obj in storage.all().values():
-            loaded = obj
+        all_objects = storage.all().values()
+        self.assertGreater(len(all_objects), 0)  # Check if dictionary is not empty
+        loaded = next(iter(all_objects))
         self.assertEqual(new.to_dict()['id'], loaded.to_dict()['id'])
-
-    def reload(self):
-    """ Reloads objects from file """
-    try:
-        with open(self.__file_path, 'r', encoding='utf-8') as file:
-            data = json.load(file)
-            for key, value in data.items():
-                class_name = value['__class__']
-                cls = models[class_name]  # Assuming you have a mapping of class names to classes
-                instance = cls(**value)
-                self.__objects[key] = instance
-    except FileNotFoundError:
-        pass  # Handle the case where the file doesn't exist
 
     def test_reload_empty(self):
         """ Load from an empty file """
@@ -115,13 +103,9 @@ class test_fileStorage(unittest.TestCase):
         """ Key is properly formatted """
         new = BaseModel()
         _id = new.to_dict()['id']
-        temp = None
-        for key in storage.all().keys():
-            temp = key
-         if temp is not None:
-             self.assertEqual(temp, 'BaseModel' + '.' + _id)
-        else:
-        self.fail("No keys found in storage")
+        key_format = 'BaseModel' + '.' + _id
+        keys = storage.all().keys()
+        self.assertIn(key_format, keys)
 
     def test_storage_var_created(self):
         """ FileStorage object storage created """
